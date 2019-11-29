@@ -27,29 +27,25 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.10</version>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-                  <execution>
-                    <id>add-resource</id>
-                    <phase>generate-resources</phase>
-                    <goals>
-                        <goal>add-resource</goal>
-                    </goals>
-                    <configuration>
-                        <resources>
-                            <resource>
-                                <directory>src/main/resources</directory>
-                                <includes>
-                                    <include>**/*.png</include>
-                                    <include>**/*.properties</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                  </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
                 </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.randomlychosenbytes.jlocker.main.MainFrame</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
