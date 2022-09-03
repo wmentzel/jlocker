@@ -42,7 +42,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.randomlychosenbytes.jlocker.main.MainFrame</mainClass>
+                            <mainClass>main.MainFrame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
