@@ -38,7 +38,8 @@ jLocker works completely offline and only saves data locally on your PC.
 
 ### Platform Independent:
 
-jLocker can run on any operating system (any version of Windows, Mac OS or Linux) for which there is a Java Virtual
+jLocker can run on any operating system (any version of Windows, Mac OS or Linux) for which
+there is a Java Virtual
 Machine
 
 ### Search
@@ -51,4 +52,9 @@ jLocker is open source and can be used by anyone for free
 
 ### Backups
 
-You can specify the number of data states that should be preserved to recover data that was deleted unintentionally.
+You can specify the number of data states that should be preserved to recover data that was deleted
+unintentionally.
+
+## How to build JAR file
+
+Run the maven "package" task
