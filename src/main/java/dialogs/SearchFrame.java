@@ -14,9 +14,15 @@ import nonabstractreps.Building;
 import nonabstractreps.Floor;
 import nonabstractreps.Locker;
 import nonabstractreps.Walk;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
-import java.awt.print.PrinterException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -313,7 +319,7 @@ public class SearchFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 10, 10);
         lockerDataPanel.add(emptySelectedButton, gridBagConstraints);
 
-        printResultsButton.setText("Ergebnisse drucken");
+        printResultsButton.setText("XLSX exportieren");
         printResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printResultsButtonActionPerformed(evt);
@@ -339,6 +345,8 @@ public class SearchFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    List<List<Object>> tableData = new LinkedList();
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_searchButtonActionPerformed
     {//GEN-HEADEREND:event_searchButtonActionPerformed
@@ -378,7 +386,7 @@ public class SearchFrame extends javax.swing.JFrame {
         String untildate = untilDateTextField.getText();
         String lock = lockTextField.getText();
 
-        List tableData = new LinkedList();
+        tableData = new LinkedList();
 
         foundLockers = new LinkedList<>();
 
@@ -558,13 +566,42 @@ public class SearchFrame extends javax.swing.JFrame {
 
     private void printResultsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printResultsButtonActionPerformed
     {//GEN-HEADEREND:event_printResultsButtonActionPerformed
-        if (table != null) {
-            System.out.print("* printing... ");
-            try {
-                table.print();
-                System.out.print("successfull");
-            } catch (PrinterException ex) {
-                System.out.print("failed");
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Suchergebnisse");
+
+        int columnCount = 0;
+
+        // write header
+        Row headerRow = sheet.createRow(0);
+        for (String column : columnData) {
+            Cell cell = headerRow.createCell(columnCount++);
+            cell.setCellValue(column);
+        }
+
+        // write data
+        int rowCount = 1;
+        for (List<Object> columns : tableData) {
+            Row row = sheet.createRow(rowCount++);
+            columnCount = 0;
+
+            for (Object column : columns) {
+                Cell cell = row.createCell(columnCount++);
+                cell.setCellValue(column.toString());
+            }
+
+            File xlsxSheetFile = new File("suchergebnisse.xlsx");
+            System.out.println("Excel sheet suchergebnisse.xlsx has been saved to " + xlsxSheetFile.getAbsolutePath());
+            try (FileOutputStream outputStream = new FileOutputStream(xlsxSheetFile)) {
+                workbook.write(outputStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }//GEN-LAST:event_printResultsButtonActionPerformed
