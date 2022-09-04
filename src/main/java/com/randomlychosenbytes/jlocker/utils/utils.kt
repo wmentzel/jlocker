@@ -2,9 +2,40 @@ package com.randomlychosenbytes.jlocker.utils
 
 import com.randomlychosenbytes.jlocker.EntityCoordinates
 import com.randomlychosenbytes.jlocker.model.*
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+
+fun createExcelSheet(header: List<String>, data: List<List<Any>>, filename: String) {
+    val workbook = XSSFWorkbook()
+    val sheet = workbook.createSheet()
+
+    // write header
+    val headerRow: Row = sheet.createRow(0)
+    header.forEachIndexed { index, column ->
+        val cell: Cell = headerRow.createCell(index)
+        cell.setCellValue(column)
+    }
+
+    // write data
+    data.forEachIndexed { rowIndex, columns ->
+        val row: Row = sheet.createRow(rowIndex + 1)
+        columns.forEachIndexed { colIndex, value ->
+            val cell: Cell = row.createCell(colIndex)
+            cell.setCellValue(value.toString())
+        }
+    }
+
+    val xlsxFile = File("$filename.xlsx")
+    println("Excel sheet $filename.xlsx has been saved to ${xlsxFile.absolutePath}")
+    FileOutputStream(xlsxFile).use { workbook.write(it) }
+    workbook.close()
+}
 
 fun isDateValid(dateStr: String): Boolean = try {
     LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"))

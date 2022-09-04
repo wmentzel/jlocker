@@ -21,6 +21,9 @@ dependencies {
     implementation("org.jgrapht:jgrapht-ext:1.0.0") // leave at 1.0.0, breaking changes
     implementation("org.jgrapht:jgrapht-core:1.0.0") // leave at 1.0.0, breaking changes
 
+    implementation("org.apache.poi:poi:4.1.1")
+    implementation("org.apache.poi:poi-ooxml:5.4.0")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 

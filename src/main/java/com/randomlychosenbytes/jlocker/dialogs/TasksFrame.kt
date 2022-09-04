@@ -2,24 +2,27 @@ package com.randomlychosenbytes.jlocker.dialogs
 
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.model.Task
+import com.randomlychosenbytes.jlocker.utils.createExcelSheet
 import java.awt.*
-import java.awt.print.PrinterException
 import java.util.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 class TasksFrame : JFrame() {
-    private val columnData = arrayOf("Datum", "Aufgabe", "erledigt")
+    private val columnData = listOf("Datum", "Aufgabe", "erledigt")
     private val table: JTable = JTable() // model, header
     private lateinit var tablemodel: DefaultTableModel
+    private var tableData: List<List<Any>> = emptyList()
 
     private fun createTableModel() {
 
-        val tableData = dataManager.tasks.reversed().map { task ->
-            arrayOf(task.creationDate, task.description, task.isDone)
-        }.toTypedArray()
+        tableData = dataManager.tasks.reversed().map { task ->
+            listOf(task.creationDate, task.description, task.isDone)
+        }
 
-        tablemodel = object : DefaultTableModel(tableData, columnData) {
+        val tableDataArray = tableData.map { it.toTypedArray() }.toTypedArray()
+
+        tablemodel = object : DefaultTableModel(tableDataArray, columnData.toTypedArray()) {
             var types = arrayOf(
                 String::class.java,
                 String::class.java,
@@ -60,7 +63,7 @@ class TasksFrame : JFrame() {
         deleteAllButton.text = "Alle Löschen"
         deleteAllButton.addActionListener { deleteAllButtonActionPerformed() }
         middlePanel.add(deleteAllButton)
-        printTasksButton.text = "Drucken"
+        printTasksButton.text = "XLSX exportieren"
         printTasksButton.addActionListener { printTasksButtonActionPerformed() }
         middlePanel.add(printTasksButton)
         var gridBagConstraints: GridBagConstraints = GridBagConstraints()
@@ -137,16 +140,7 @@ class TasksFrame : JFrame() {
     }
 
     private fun printTasksButtonActionPerformed() {
-        try {
-            table.print()
-        } catch (ex: PrinterException) {
-            JOptionPane.showMessageDialog(
-                null,
-                "Das Drucken ist aufgrund eines Fehlers nicht möglich!",
-                "Fehler",
-                JOptionPane.INFORMATION_MESSAGE
-            )
-        }
+        createExcelSheet(columnData, tableData, "aufgaben")
     }
 
     private fun addButtonActionPerformed() {

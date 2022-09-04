@@ -4,12 +4,12 @@ import com.randomlychosenbytes.jlocker.EntityCoordinates
 import com.randomlychosenbytes.jlocker.State.Companion.dataManager
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.SuperUser
+import com.randomlychosenbytes.jlocker.utils.createExcelSheet
 import com.randomlychosenbytes.jlocker.utils.findLockers
 import com.randomlychosenbytes.jlocker.utils.getAllLockerCoordinates
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.print.PrinterException
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
@@ -23,6 +23,7 @@ class SearchFrame(owner: JFrame) : JDialog(owner, true) {
         })
     }
     private lateinit var foundLockers: List<EntityCoordinates<Locker>>
+    private var tableData: List<List<Any>> = emptyList()
 
     private val columnData = listOfNotNull(
         "Schließfach-ID", "Name", "Vorname", "Klasse", "Größe", "Vertrag", "Geld", "Dauer", "von", "bis", "Schloss",
@@ -195,7 +196,7 @@ class SearchFrame(owner: JFrame) : JDialog(owner, true) {
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(0, 10, 10, 10)
         lockerDataPanel.add(emptySelectedButton, gridBagConstraints)
-        printResultsButton.text = "Ergebnisse drucken"
+        printResultsButton.text = "XLSX exportieren"
         printResultsButton.addActionListener { printResultsButtonActionPerformed() }
         gridBagConstraints = GridBagConstraints()
         gridBagConstraints.insets = Insets(0, 0, 10, 10)
@@ -228,7 +229,7 @@ class SearchFrame(owner: JFrame) : JDialog(owner, true) {
             emptyCheckbox.isSelected
         ).toList()
 
-        val tableData = foundLockers.map { foundLockerCoords ->
+        val newTableData = foundLockers.map { foundLockerCoords ->
 
             val locker = foundLockerCoords.entity
 
@@ -258,13 +259,15 @@ class SearchFrame(owner: JFrame) : JDialog(owner, true) {
                 rowData.add(codes)
             }
 
-            rowData.toTypedArray()
+            rowData.toList()
         }
+
+        tableData = newTableData
 
         resultsPanel.removeAll()
 
         if (foundLockers.isNotEmpty()) {
-            table.model = object : DefaultTableModel(tableData.toTypedArray(), columnData) {
+            table.model = object : DefaultTableModel(newTableData.map { it.toTypedArray() }.toTypedArray(), columnData) {
                 override fun getColumnClass(columnIndex: Int): Class<*> {
                     return dataTypes[columnIndex]
                 }
@@ -284,13 +287,7 @@ class SearchFrame(owner: JFrame) : JDialog(owner, true) {
     }
 
     private fun printResultsButtonActionPerformed() {
-        print("* printing... ")
-        try {
-            table.print()
-            print("successful")
-        } catch (ex: PrinterException) {
-            print("failed")
-        }
+        createExcelSheet(columnData.toList(), tableData, "suchergebnisse")
     }
 
     private fun emptySelectedButtonActionPerformed() {
