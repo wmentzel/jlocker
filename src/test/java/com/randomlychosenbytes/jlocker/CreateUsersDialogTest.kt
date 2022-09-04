@@ -1,39 +1,32 @@
 package com.randomlychosenbytes.jlocker
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.randomlychosenbytes.jlocker.dialogs.CreateUsersDialog
 import com.randomlychosenbytes.jlocker.model.Building
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.mockito.junit.jupiter.MockitoExtension
 import javax.crypto.SecretKey
 import javax.swing.*
 
+@ExtendWith(MockitoExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class CreateUsersDialogTest {
 
     @InjectMocks
     private lateinit var dialog: CreateUsersDialog
 
-    val dataManager = mock<DataManager>()
+    private val dataManager = mock<DataManager>()
 
     init {
         State.dataManager = dataManager
-    }
-
-    @BeforeEach
-    fun setup() {
-        MockitoAnnotations.openMocks(this)
-    }
-
-    @AfterEach
-    fun reset() {
-        reset(dataManager)
     }
 
     @Test
@@ -99,8 +92,6 @@ class CreateUsersDialogTest {
 
         val buildings = mock<MutableList<Building>>()
         whenever(dataManager.buildingList).thenReturn(buildings)
-        whenever(buildings.isEmpty()).thenReturn(false)
-        whenever(buildings.iterator()).thenReturn(mutableListOf<Building>().iterator())
 
         val old = mock<SecretKey>()
         whenever(dataManager.superUserMasterKey).thenReturn(old)

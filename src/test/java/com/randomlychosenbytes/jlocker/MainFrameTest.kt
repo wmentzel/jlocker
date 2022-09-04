@@ -3,19 +3,22 @@ package com.randomlychosenbytes.jlocker
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.model.Pupil
 import com.randomlychosenbytes.jlocker.model.SuperUser
 import com.randomlychosenbytes.jlocker.uicomponents.LockerPanel
 import com.randomlychosenbytes.jlocker.utils.generateKey
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.swing.JCheckBox
@@ -23,15 +26,13 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JTextField
 
+@ExtendWith(MockitoExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MainFrameTest {
 
     private val dataManager = mock<DataManager>()
 
-    @BeforeEach
-    fun setup() {
-        reset(dataManager)
-        MockitoAnnotations.openMocks(this)
+    init {
         State.dataManager = dataManager
     }
 

@@ -10,7 +10,6 @@ import com.randomlychosenbytes.jlocker.model.RestrictedUser
 import com.randomlychosenbytes.jlocker.model.SuperUser
 import com.randomlychosenbytes.jlocker.utils.decryptKeyWithString
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -18,10 +17,6 @@ import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class DataManagerTest {
-
-    @BeforeEach
-    fun setup() {
-    }
 
     private val superUserPassword = "111111111"
     private val restrictedUserPassword = "22222222"

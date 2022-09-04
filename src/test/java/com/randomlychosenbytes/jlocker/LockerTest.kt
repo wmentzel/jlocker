@@ -4,15 +4,11 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.randomlychosenbytes.jlocker.model.Locker
 import com.randomlychosenbytes.jlocker.utils.generateKey
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LockerTest {
-    @BeforeEach
-    fun setup() {
-    }
 
     @Test
     fun `should encrypt and decrypt codes correctly`() {
