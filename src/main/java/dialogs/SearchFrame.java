@@ -9,19 +9,14 @@ package dialogs;
 import abstractreps.EntityCoordinates;
 import abstractreps.ManagementUnit;
 import main.MainFrame;
+import main.Utils;
 import manager.DataManager;
 import nonabstractreps.Building;
 import nonabstractreps.Floor;
 import nonabstractreps.Locker;
 import nonabstractreps.Walk;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -566,43 +561,10 @@ public class SearchFrame extends javax.swing.JFrame {
 
     private void printResultsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printResultsButtonActionPerformed
     {//GEN-HEADEREND:event_printResultsButtonActionPerformed
-
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Suchergebnisse");
-
-        int columnCount = 0;
-
-        // write header
-        Row headerRow = sheet.createRow(0);
-        for (String column : columnData) {
-            Cell cell = headerRow.createCell(columnCount++);
-            cell.setCellValue(column);
-        }
-
-        // write data
-        int rowCount = 1;
-        for (List<Object> columns : tableData) {
-            Row row = sheet.createRow(rowCount++);
-            columnCount = 0;
-
-            for (Object column : columns) {
-                Cell cell = row.createCell(columnCount++);
-                cell.setCellValue(column.toString());
-            }
-
-            File xlsxSheetFile = new File("suchergebnisse.xlsx");
-            System.out.println("Excel sheet suchergebnisse.xlsx has been saved to " + xlsxSheetFile.getAbsolutePath());
-            try (FileOutputStream outputStream = new FileOutputStream(xlsxSheetFile)) {
-                workbook.write(outputStream);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                try {
-                    workbook.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        try {
+            Utils.createExcelSheet(columnData, tableData, "suchergebnisse.xlsx");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }//GEN-LAST:event_printResultsButtonActionPerformed
 
