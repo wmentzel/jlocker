@@ -9,6 +9,7 @@ package dialogs;
 import abstractreps.EntityCoordinates;
 import abstractreps.ManagementUnit;
 import main.MainFrame;
+import main.Utils;
 import manager.DataManager;
 import nonabstractreps.Building;
 import nonabstractreps.Floor;
@@ -16,7 +17,7 @@ import nonabstractreps.Locker;
 import nonabstractreps.Walk;
 
 import javax.swing.*;
-import java.awt.print.PrinterException;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -313,7 +314,7 @@ public class SearchFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 10, 10, 10);
         lockerDataPanel.add(emptySelectedButton, gridBagConstraints);
 
-        printResultsButton.setText("Ergebnisse drucken");
+        printResultsButton.setText("XLSX exportieren");
         printResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printResultsButtonActionPerformed(evt);
@@ -339,6 +340,8 @@ public class SearchFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    List<List<Object>> tableData = new LinkedList();
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_searchButtonActionPerformed
     {//GEN-HEADEREND:event_searchButtonActionPerformed
@@ -378,7 +381,7 @@ public class SearchFrame extends javax.swing.JFrame {
         String untildate = untilDateTextField.getText();
         String lock = lockTextField.getText();
 
-        List tableData = new LinkedList();
+        tableData = new LinkedList();
 
         foundLockers = new LinkedList<>();
 
@@ -558,14 +561,10 @@ public class SearchFrame extends javax.swing.JFrame {
 
     private void printResultsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printResultsButtonActionPerformed
     {//GEN-HEADEREND:event_printResultsButtonActionPerformed
-        if (table != null) {
-            System.out.print("* printing... ");
-            try {
-                table.print();
-                System.out.print("successfull");
-            } catch (PrinterException ex) {
-                System.out.print("failed");
-            }
+        try {
+            Utils.createExcelSheet(columnData, tableData, "suchergebnisse");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }//GEN-LAST:event_printResultsButtonActionPerformed
 

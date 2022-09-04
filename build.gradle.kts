@@ -13,8 +13,11 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jgrapht:jgrapht-ext:0.9.0") // don't bump, breaking changes
-    implementation("org.jgrapht:jgrapht-core:0.9.0") // don't bump, breaking changes
+    // don't bump, breaking changes
+    implementation("org.jgrapht:jgrapht-ext:0.9.0")
+    implementation("org.jgrapht:jgrapht-core:0.9.0")
+    implementation("org.apache.poi:poi:3.17")
+    implementation("org.apache.poi:poi-ooxml:3.17")
 }
 
 tasks {

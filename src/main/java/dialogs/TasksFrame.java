@@ -6,12 +6,13 @@
 
 package dialogs;
 
+import main.Utils;
 import manager.DataManager;
 import nonabstractreps.Task;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.print.PrinterException;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,11 +53,10 @@ public class TasksFrame extends javax.swing.JFrame {
         tableScrollPane.setViewportView(table);
     }
 
-    /**
-     *
-     */
+    List<List<Object>> tableData = new LinkedList();
+
     private void createTableModel() {
-        List tableData = new LinkedList();
+        tableData = new LinkedList();
 
         List<Task> tasks = dataManager.getTasks();
 
@@ -142,7 +142,7 @@ public class TasksFrame extends javax.swing.JFrame {
         });
         middlePanel.add(deleteAllButton);
 
-        printTasksButton.setText("Drucken");
+        printTasksButton.setText("XLSX exportieren");
         printTasksButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printTasksButtonActionPerformed(evt);
@@ -240,9 +240,9 @@ public class TasksFrame extends javax.swing.JFrame {
     private void printTasksButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printTasksButtonActionPerformed
     {//GEN-HEADEREND:event_printTasksButtonActionPerformed
         try {
-            table.print();
-        } catch (PrinterException ex) {
-            JOptionPane.showMessageDialog(null, "Das Drucken ist aufgrund eines Fehlers nicht möglich!", "Fehler", JOptionPane.INFORMATION_MESSAGE);
+            Utils.createExcelSheet(columnData, tableData, "aufgaben");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }//GEN-LAST:event_printTasksButtonActionPerformed
 
