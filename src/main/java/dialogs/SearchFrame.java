@@ -562,7 +562,7 @@ public class SearchFrame extends javax.swing.JFrame {
     private void printResultsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_printResultsButtonActionPerformed
     {//GEN-HEADEREND:event_printResultsButtonActionPerformed
         try {
-            Utils.createExcelSheet(columnData, tableData, "suchergebnisse.xlsx");
+            Utils.createExcelSheet(columnData, tableData, "suchergebnisse");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

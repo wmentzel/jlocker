@@ -2,4 +2,4 @@
 /.gradle
 /build
 /out
-suchergebnisse.xlsx
+*.xlsx
