@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClassName = "main.MainFrame"
+    mainClassName = "com.randomlychosenbytes.jlocker.main.MainFrame"
 }
 
 version = "1.0-SNAPSHOT"
@@ -13,8 +13,12 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.8.6")
+
     implementation("org.jgrapht:jgrapht-ext:0.9.0") // don't bump, breaking changes
     implementation("org.jgrapht:jgrapht-core:0.9.0") // don't bump, breaking changes
+
+    testImplementation("junit", "junit", "4.12")
 }
 
 tasks {
