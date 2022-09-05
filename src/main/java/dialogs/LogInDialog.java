@@ -76,7 +76,7 @@ public class LogInDialog extends javax.swing.JDialog {
         loadBackupButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("jLocker 1.5 - Anmeldung");
+        setTitle("jLocker 1.6 - Anmeldung");
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
