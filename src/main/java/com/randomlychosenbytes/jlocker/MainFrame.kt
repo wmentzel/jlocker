@@ -970,7 +970,7 @@ class MainFrame : JFrame() {
             dataManager.buildingList.add(this)
         }
 
-        currentFloor = Floor(name).apply {
+        currentFloor = Floor("-").apply {
             currentFloorList.add(this)
         }
 
