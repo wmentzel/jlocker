@@ -1,0 +1,374 @@
+package com.randomlychosenbytes.jlocker
+
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
+import com.randomlychosenbytes.jlocker.model.*
+import org.junit.jupiter.api.Test
+
+class ShortenClassRoomDistancesTest {
+
+    @Test
+    fun shouldReportIfClassRoomDoesNotExist() {
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(listOf(Floor("ground floor").apply {
+                    walks.addAll(listOf(Walk("main walk").apply {
+                        modules.addAll(
+                            listOf(
+                                createModuleWithLockerCabinetOf(
+                                    Locker(id = "1").apply {
+                                        moveInNewOwner(Pupil().apply {
+                                            firstName = "Don"
+                                            lastName = "Draper"
+                                            heightInCm = 175
+                                            schoolClassName = "12"
+                                        })
+                                    },
+                                    Locker(id = "2")
+                                )
+                            )
+                        )
+                    }))
+                }))
+            })
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.ClassRoomForSpecifiedClassDoesNotExist)
+    }
+
+    @Test
+    fun shouldReportIfNonReachableLockersExist() {
+
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(listOf(Floor("ground floor").apply {
+                    walks.addAll(listOf(Walk("main walk").apply {
+                        modules.addAll(listOf(createModuleWithLockerCabinetOf(
+                            Locker(id = "1").apply {
+                                moveInNewOwner(Pupil().apply {
+                                    firstName = "Don"
+                                    lastName = "Draper"
+                                    heightInCm = 175
+                                    schoolClassName = "12"
+                                })
+                            }
+                        ),
+                            Room("", "12"),
+                            Staircase("main staircase")
+                        ))
+                    }))
+                },
+                    Floor("first floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(
+                                listOf(
+                                    createModuleWithLockerCabinetOf(
+                                        Locker(id = "2") // unreachable locker
+                                    ),
+                                )
+                            )
+                        }))
+                    }
+                ))
+            })
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.NonReachableLockersExist)
+    }
+
+    @Test
+    fun shouldReportIfNoLockersAreFree() {
+
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(
+                    listOf(
+                        Floor("ground floor").apply {
+                            walks.addAll(listOf(Walk("main walk").apply {
+                                modules.addAll(
+                                    listOf(
+                                        createModuleWithLockerCabinetOf(
+                                            Locker(id = "1").apply {
+                                                moveInNewOwner(Pupil().apply {
+                                                    firstName = "Don"
+                                                    lastName = "Draper"
+                                                    heightInCm = 175
+                                                    schoolClassName = "12"
+                                                })
+                                            },
+                                            Locker(id = "2").apply {
+                                                moveInNewOwner(Pupil().apply {
+                                                    firstName = "Peggy"
+                                                    lastName = "Olsen"
+                                                    heightInCm = 150
+                                                    schoolClassName = "12"
+                                                })
+                                            },
+                                        ),
+                                        Room("", "12")
+                                    )
+                                )
+                            }))
+                        }
+                    )
+                )
+            })
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.NoFreeLockersAvailable)
+    }
+
+    @Test
+    fun shouldMovePupilsAcrossWalks() {
+    }
+
+    @Test
+    fun shouldMovePupilsAcrossFloors() {
+    }
+
+    @Test
+    fun shouldMovePupilsAcrossBuildings() {
+    }
+
+    @Test
+    fun shouldMovePupilToCorrectFreeLocker() {
+
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(
+                    listOf(
+                        Floor("ground floor").apply {
+                            walks.addAll(listOf(Walk("main walk").apply {
+                                modules.addAll(
+                                    listOf(
+                                        createModuleWithLockerCabinetOf(
+                                            Locker(id = "1").apply {
+                                                moveInNewOwner(Pupil().apply {
+                                                    firstName = "Don"
+                                                    lastName = "Draper"
+                                                    heightInCm = 175
+                                                    schoolClassName = "12"
+                                                })
+                                            },
+                                            Locker(id = "2").apply {
+                                                moveInNewOwner(Pupil().apply {
+                                                firstName = "Peggy"
+                                                lastName = "Olsen"
+                                                heightInCm = 150
+                                                schoolClassName = "12"
+                                            })
+                                        },
+                                        Locker(id = "3").apply {
+                                            moveInNewOwner(Pupil().apply {
+                                                firstName = "Peter"
+                                                lastName = "Campbell"
+                                                heightInCm = 150
+                                                schoolClassName = "11"
+                                            })
+                                        }
+                                    ),
+                                        createModuleWithLockerCabinetOf(
+                                            Locker(id = "4"),
+                                            Locker(id = "5"),
+                                            Locker(id = "6")
+                                        ),
+
+                                        createModuleWithLockerCabinetOf(
+                                            Locker(id = "7"),
+                                            Locker(id = "8"),
+                                            Locker(id = "9")
+                                        ),
+                                        Room("some classroom", "12"),
+                                        Staircase("main staircase")
+                                    ))
+                            }))
+                        }
+                    )
+                )
+            })
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
+        scd.execute()
+
+        // should be moved to highest locker
+        assertThat((buildings[0].floors[0].walks[0].modules[2] as LockerCabinet).lockers[0].isFree).isFalse()
+        assertThat((buildings[0].floors[0].walks[0].modules[2] as LockerCabinet).lockers[0].pupil.lastName).isEqualTo("Draper")
+        assertThat((buildings[0].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].isFree).isTrue()
+
+        // should be moved to second highest locker
+        assertThat((buildings[0].floors[0].walks[0].modules[2] as LockerCabinet).lockers[1].isFree).isFalse()
+        assertThat((buildings[0].floors[0].walks[0].modules[2] as LockerCabinet).lockers[1].pupil.lastName).isEqualTo("Olsen")
+        assertThat((buildings[0].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].isFree).isTrue()
+
+        // should not have been moved
+        assertThat((buildings[0].floors[0].walks[0].modules[0] as LockerCabinet).lockers[2].isFree).isFalse()
+        assertThat((buildings[0].floors[0].walks[0].modules[0] as LockerCabinet).lockers[2].pupil.lastName).isEqualTo("Campbell")
+    }
+
+
+    @Test
+    fun `should optimize class room distances across different buildings`() {
+
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(listOf(
+                    Floor("ground floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(listOf(
+                                createModuleWithLockerCabinetOf(
+                                    Locker(id = "1").apply {
+                                        moveInNewOwner(Pupil().apply {
+                                            firstName = "Don"
+                                            lastName = "Draper"
+                                            heightInCm = 175
+                                            schoolClassName = "12"
+                                        })
+                                    }
+                                ),
+                                Staircase("entry")
+                            ))
+                        }))
+                    }
+                ))
+            },
+            Building("second building").apply {
+                floors.addAll(listOf(
+                    Floor("ground floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(
+                                listOf(
+                                    createModuleWithLockerCabinetOf(
+                                        Locker(id = "2")
+                                    ),
+                                    Room("some classroom", "12"),
+                                    Staircase("entry")
+                                )
+                            )
+                        }))
+                    }
+                ))
+            })
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
+        scd.execute()
+
+        assertThat((buildings[0].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].isFree).isTrue()
+        assertThat((buildings[1].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].isFree).isFalse()
+        assertThat((buildings[1].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].pupil.firstName).isEqualTo(
+            "Don"
+        )
+        assertThat((buildings[1].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].pupil.lastName).isEqualTo(
+            "Draper"
+        )
+    }
+
+    @Test
+    fun `should optimize class room distances across floors`() {
+
+        val buildings = listOf(
+            Building("main building").apply {
+                floors.addAll(listOf(
+                    Floor("ground floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(listOf(
+                                createModuleWithLockerCabinetOf(
+                                    Locker(id = "1").apply {
+                                        moveInNewOwner(Pupil().apply {
+                                            firstName = "Don"
+                                            lastName = "Draper"
+                                            heightInCm = 175
+                                            schoolClassName = "12"
+                                        })
+                                    }
+                                ),
+                                Staircase("main staircase")
+                            ))
+                        }))
+                    },
+                    Floor("1st floor").apply {
+
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(listOf(Staircase("main staircase")))
+                        }))
+                    },
+                    Floor("2nd floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(
+                                listOf(
+                                    Staircase("main staircase")
+                                )
+                            )
+                        }))
+                    },
+                    Floor("3rd floor").apply {
+                        walks.addAll(listOf(Walk("main walk").apply {
+                            modules.addAll(
+                                listOf(
+                                    createModuleWithLockerCabinetOf(
+                                        Locker(id = "2")
+                                    ),
+                                    Room("some classroom", "12"),
+                                    Staircase("main staircase")
+                                )
+                            )
+                        }))
+                    }
+                ))
+            })
+
+        val scd = ShortenClassRoomDistances(
+            buildings = buildings,
+            lockerMinSizes = listOf(0, 0, 140, 150, 175),
+            className = "12",
+            createTask = { /* no-op */ }
+        )
+
+        val status = scd.check()
+        assertThat(status).isEqualTo(ShortenClassRoomDistances.Status.Success)
+        scd.execute()
+
+        assertThat((buildings[0].floors[0].walks[0].modules[0] as LockerCabinet).lockers[0].isFree).isTrue()
+        assertThat((buildings[0].floors[3].walks[0].modules[0] as LockerCabinet).lockers[0].isFree).isFalse()
+        assertThat((buildings[0].floors[3].walks[0].modules[0] as LockerCabinet).lockers[0].pupil.firstName).isEqualTo("Don")
+        assertThat((buildings[0].floors[3].walks[0].modules[0] as LockerCabinet).lockers[0].pupil.lastName).isEqualTo("Draper")
+    }
+}

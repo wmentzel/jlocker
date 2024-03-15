@@ -55,6 +55,11 @@ jLocker is open source and can be used by anyone for free
 You can specify the number of data states that should be preserved to recover data that was deleted
 unintentionally.
 
+## How to run
+
+    ./gradlew run
+
 ## How to build JAR file
 
-Run the maven "package" task
+    ./gradlew fatJar
+
