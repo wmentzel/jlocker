@@ -1,6 +1,6 @@
 plugins {
     application
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.9.20"
 }
 
 application {
@@ -15,19 +15,19 @@ repositories {
 
 dependencies {
 
-    implementation("com.google.code.gson:gson:2.9.0")
-    implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.guava:guava:33.0.0-jre")
 
     implementation("org.jgrapht:jgrapht-ext:1.0.0") // don't bump, breaking changes
     implementation("org.jgrapht:jgrapht-core:1.0.0") // don't bump, breaking changes
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
 
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("org.mockito:mockito-core:4.7.0")
-    testImplementation("org.mockito:mockito-inline:4.7.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:4.7.0")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.27.0")
+    testImplementation("org.mockito:mockito-core:5.10.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
