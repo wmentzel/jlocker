@@ -18,8 +18,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.guava:guava:33.0.0-jre")
 
-    implementation("org.jgrapht:jgrapht-ext:1.0.0") // don't bump, breaking changes
-    implementation("org.jgrapht:jgrapht-core:1.0.0") // don't bump, breaking changes
+    implementation("org.jgrapht:jgrapht-ext:1.0.0") // leave at 1.0.0, breaking changes
+    implementation("org.jgrapht:jgrapht-core:1.0.0") // leave at 1.0.0, breaking changes
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
