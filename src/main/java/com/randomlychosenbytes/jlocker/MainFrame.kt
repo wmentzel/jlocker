@@ -390,13 +390,17 @@ class MainFrame : JFrame() {
     fun updateComboBoxes() {
         initializeComboBox(dataManager.buildingList, buildingComboBox)
         buildingComboBox.selectedIndex = dataManager.buildingList.indexOf(currentBuilding)
+
         initializeComboBox(currentFloorList, floorComboBox)
         floorComboBox.selectedIndex = currentFloorList.indexOf(currentFloor)
+
         initializeComboBox(currentWalkList, walkComboBox)
         walkComboBox.selectedIndex = currentWalkList.indexOf(currentWalk)
+
         removeBuildingButton.isEnabled = dataManager.buildingList.size > 1
         removeFloorButton.isEnabled = currentFloorList.size > 1
         removeWalkButton.isEnabled = currentWalkList.size > 1
+
         drawLockerOverview()
     }
 
@@ -898,7 +902,7 @@ class MainFrame : JFrame() {
             currentWalk = currentWalkList.first()
             currentLocker =
                 currentWalk.modules.filterIsInstance<LockerCabinet>().flatMap { it.lockers }
-                    .first()
+                    .firstOrNull()
             updateComboBoxes()
         }
     }
