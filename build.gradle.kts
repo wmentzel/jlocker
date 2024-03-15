@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClassName = "com.randomlychosenbytes.jlocker.MainFrame"
+    mainClass.set("com.randomlychosenbytes.jlocker.MainKt")
 }
 
 version = "1.0-SNAPSHOT"
