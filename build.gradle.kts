@@ -49,6 +49,6 @@ tasks {
     }
 
     "wrapper"(Wrapper::class) {
-        gradleVersion = "7.5.1"
+        gradleVersion = "8.6"
     }
 }
