@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run jLocker" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="com.randomlychosenbytes.jlocker.MainKt" />
+    <module name="jlocker.main" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
